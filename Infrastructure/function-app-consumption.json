@@ -1,5 +1,5 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
     "appName": {
@@ -11,7 +11,11 @@
     "storageAccountType": {
       "type": "string",
       "defaultValue": "Standard_LRS",
-      "allowedValues": [ "Standard_LRS", "Standard_GRS", "Standard_RAGRS" ],
+      "allowedValues": [
+        "Standard_LRS",
+        "Standard_GRS",
+        "Standard_RAGRS"
+      ],
       "metadata": {
         "description": "Storage Account type"
       }
@@ -32,7 +36,11 @@
     "runtime": {
       "type": "string",
       "defaultValue": "dotnet",
-      "allowedValues": [ "node", "dotnet", "java" ],
+      "allowedValues": [
+        "node",
+        "dotnet",
+        "java"
+      ],
       "metadata": {
         "description": "The language worker runtime to load in the function app."
       }
@@ -40,6 +48,10 @@
     "applicationInsightsName": {
       "type": "string",
       "defaultValue": "[parameters('appName')]"
+    },
+    "extensionVersion": {
+      "type": "string",
+      "defaultValue": "~3"
     }
   },
   "variables": {
@@ -48,13 +60,14 @@
     "applicationInsightsName": "[parameters('applicationInsightsName')]",
     "storageAccountName": "[parameters('storageAccountName')]",
     "storageAccountid": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+    "functionAppid": "[concat(resourceGroup().id,'/providers/','Microsoft.Web/sites/', variables('functionAppName'))]",
     "functionWorkerRuntime": "[parameters('runtime')]"
   },
   "resources": [
     {
       "type": "Microsoft.Storage/storageAccounts",
       "name": "[variables('storageAccountName')]",
-      "apiVersion": "2016-12-01",
+      "apiVersion": "2018-07-01",
       "location": "[parameters('location')]",
       "kind": "Storage",
       "sku": {
@@ -110,7 +123,7 @@
             },
             {
               "name": "FUNCTIONS_EXTENSION_VERSION",
-              "value": "~2"
+              "value": "[parameters('extensionVersion')]"
             },
             {
               "name": "WEBSITE_NODE_DEFAULT_VERSION",
@@ -129,17 +142,25 @@
       }
     },
     {
-      "apiVersion": "2018-05-01-preview",
+      "apiVersion": "2015-05-01",
       "name": "[variables('applicationInsightsName')]",
       "type": "microsoft.insights/components",
       "location": "[parameters('location')]",
+      "kind": "web",
       "tags": {
         "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', variables('applicationInsightsName'))]": "Resource"
       },
       "properties": {
         "ApplicationId": "[variables('applicationInsightsName')]",
-        "Request_Source": "IbizaWebAppExtensionCreate"
+        "Application_Type": "web",
+        "SamplingPercentage": 25
       }
     }
-  ]
+  ],
+  "outputs": {
+    "functionKey": {
+      "type": "string",
+      "value": "[listkeys(concat(variables('functionAppid'), '/host/default/'),'2016-08-01').functionKeys.default]"
+    }
+  }
 }

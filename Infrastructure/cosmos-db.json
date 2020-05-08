@@ -95,6 +95,24 @@
       "metadata": {
         "description": "The name for the first SQL container"
       }
+    },
+    "container1PartitionKey": {
+      "type": "string",
+      "defaultValue": "ItemType",
+      "metadata": {
+        "description": "The name for the first container partition key"
+      }
+    },
+    "enableFreeTier": {
+      "type": "bool",
+      "defaultValue": false,
+      "allowedValues": [
+        true,
+        false
+      ],
+      "metadata": {
+        "description": "Enable enable free tier discount."
+      }
     }
   },
   "variables": {
@@ -131,7 +149,7 @@
         "databaseAccountOfferType": "Standard",
         "enableAutomaticFailover": "[parameters('automaticFailover')]",
         "enableMultipleWriteLocations": "[parameters('multipleWriteLocations')]",
-        "enableFreeTier": true
+        "enableFreeTier": "[parameters('enableFreeTier')]"
       }
     },
     {
@@ -162,7 +180,7 @@
           "id": "[parameters('container1Name')]",
           "partitionKey": {
             "paths": [
-              "/DeviceId"
+              "[parameters('container1PartitionKey')]"
             ],
             "kind": "Hash"
           },
@@ -172,11 +190,6 @@
               {
                 "path": "/*"
               }
-            ],
-            "excludedPaths": [
-              {
-                "path": "/MyPathToNotIndex/*"
-              }
             ]
           }
         }
@@ -184,7 +197,11 @@
     }
   ],
   "outputs": {
-    "cosmosConnectionString":{
+    "connectionString":{
+      "value": "[listConnectionStrings(resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('accountName')), '2019-12-12').connectionStrings[0].connectionString]",
+      "type": "string"
+    },
+    "primaryMasterKeyKey":{
       "value": "[listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('accountName')),'2019-08-01').primaryMasterKey]",
       "type": "string"
     }

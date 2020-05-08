@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <!-- Required elements-->
+        <id>rutzsco azure arm template library</id>
+        <version>0.1.1</version>
+        <description>rutzsco azure arm template library</description>
+        <authors>rutzsco</authors>
+
+        <!-- Optional elements -->
+        <!-- ... -->
+    </metadata>
+    <files>
+        <file src="Infrastructure/cosmos-db.json" target="cosmos-db.json" />
+        <file src="Infrastructure/function-app-consumption.json" target="function-app-consumption.json" />
+        <file src="Infrastructure/function-app-premium.json" target="function-app-premium.json" />
+        <file src="Infrastructure/signalr-service.json" target="signalr-service.json" />
+    </files>
+</package>
