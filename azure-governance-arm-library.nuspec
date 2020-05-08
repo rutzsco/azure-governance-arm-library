@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <!-- Required elements-->
-        <id>rutzsco azure arm template library</id>
+        <id>rutzsco-azure-arm-template-library</id>
         <version>0.1.1</version>
         <description>rutzsco azure arm template library</description>
         <authors>rutzsco</authors>

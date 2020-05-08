@@ -35,4 +35,4 @@ steps:
     command: 'push'
     packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
     nuGetFeedType: 'internal'
-    publishVstsFeed: '71066ab8-a939-4a71-9017-5e0cb4d2fhhhhghg99hc'
+    publishVstsFeed: 'Demos/rutzsco-packages'
